@@ -1,22 +1,25 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
+
+from tasks.forms import TaskForm
 from tasks.models import Task, Tag
 
 
 class TaskListView(generic.ListView):
     model = Task
+    queryset = Task.objects.prefetch_related("tags")
 
 
 class TaskCreateView(generic.CreateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("tasks:index")
 
 
 class TaskUpdateView(generic.UpdateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("tasks:index")
 
 
@@ -46,18 +49,14 @@ class TagDeleteView(generic.DeleteView):
     success_url = reverse_lazy("tasks:tag-list")
 
 
-def complete_task(request, task_id):
-    if request.method == "POST":
-        task = Task.objects.get(pk=task_id)
-        task.is_done = True
-        task.save()
-    return redirect("tasks:index")
+def complete_or_undo_task(request, task_id):
+    task = Task.objects.get(pk=task_id)
 
-
-def undo_task(request, task_id):
     if request.method == "POST":
-        Task.objects.update()
-        task = Task.objects.get(pk=task_id)
-        task.is_done = False
+        if task.is_done:
+            task.is_done = False
+        else:
+            task.is_done = True
         task.save()
+
     return redirect("tasks:index")

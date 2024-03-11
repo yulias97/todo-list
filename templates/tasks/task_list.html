@@ -18,14 +18,14 @@
             {% if task.is_done %}
               <span style="color: green">Done</span>
               <div style="float: right;">
-                <form action="{% url 'tasks:undo_task' task.id %}" method="POST" style="display: inline;">
+                <form action="{% url 'tasks:complete-undo' task.id %}" method="POST" style="display: inline;">
                   {% csrf_token %}
                   <button class="btn btn-secondary" type="submit">Undo</button>
                 </form>
-                {% else %}
-                <span style="color: red">Not Done</span>
               </div>
-              <form action="{% url 'tasks:complete_task' task.id %}" method="POST" style="display: inline;">
+            {% else %}
+              <span style="color: red">Not Done</span>
+              <form action="{% url 'tasks:complete-undo' task.id %}" method="POST" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success" style="float: right;">Complete</button>
               </form>
@@ -35,9 +35,8 @@
         <div>
           Created: {{ task.created_at }}
           {% if task.deadline %}
-            <span style="color: darkred">Deadline: {{ task.deadline }}
+            <span style="color: darkred">Deadline: {{ task.deadline }}</span>
           {% endif %}
-          </span>
         </div>
         <div>
         <span style="color: dimgrey">Tags:
@@ -60,3 +59,4 @@
     <p>There are no task.</p>
   {% endif %}
 {% endblock %}
+

@@ -5,7 +5,7 @@ from tasks.views import (
     TaskUpdateView, TaskDeleteView,
     TagListView, TagCreateView,
     TagUpdateView, TagDeleteView,
-    complete_task, undo_task
+    complete_or_undo_task,
 )
 
 urlpatterns = [
@@ -46,14 +46,9 @@ urlpatterns = [
         name="tag-delete",
     ),
     path(
-        "complete_task/<int:task_id>/",
-        complete_task,
-        name="complete_task"
-    ),
-    path(
-        "undo_task/<int:task_id>/",
-        undo_task,
-        name="undo_task"
+        "complete-undo/<int:task_id>/",
+        complete_or_undo_task,
+        name="complete-undo"
     ),
 ]
 
